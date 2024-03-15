@@ -55,12 +55,14 @@ The command to run a docker image is `docker run ...`, but there are some very u
    - only works on Windows _if_ NVIDIA Container Toolkit is installed (in the container!). This repo's dockerfiles will handle that.
    - the internet says it does _not_ work on MacOS. 🙁 (unsure if still true)
  - The name flag `--name <container-name>` sets the container name to something consistent, instead of two random words.  
+
+Examples of starting an interactive shell, and starting into Ollama serving: 
 ```bash
 #format
 docker run <imagename> <command>
 #ex: Starting an image named `langchain_ollama` into an interactive bash shell with container named `active_container`:
 docker run -it -v H:/AI_STUFF:/myapp --gpus all --name active_container langchain_ollama /bin/bash
-#ex :Starting an image directly into serving models w/ Ollama:
+#ex: Starting an image directly into serving models w/ Ollama:
 docker run -it -v H:/AI_STUFF:/myapp --gpus all --name active_container langchain_ollama ollama serve
 ```
 
@@ -69,7 +71,7 @@ docker run -it -v H:/AI_STUFF:/myapp --gpus all --name active_container langchai
 ```bash
 docker exec -it <running-container-name> <command>
 #ex: start another bash shell in the container
-docker exec -it illegible_macguffin /bin/bash
+docker exec -it active_container /bin/bash
 ```
 
 Now we're at the final step - getting some LLM's for Ollama to serve!  
@@ -92,13 +94,14 @@ The base setup is working! 🎉
 But now you need to change things so you can really experiment. In order to modify your Docker image to add a new library or save a model, it's only a few steps, and can be approached from two directions:
  - Run an Image, modify and then `commit` the Container as a new Image.
    -  Step 1: Start an interactive bash shell from the image, `docker run -it <imagename> /bin/bash`.
-   -  Step 2: Make the changes you want to the container - install Python packages, edit environment variables, download models, etc.
+   -  Step 2: Make the changes you want to the container - install Python packages, download models, etc.
    -  Step 3: Exit all shells. The container will stop.
    -  Step 4: Commit the changes made in the container to a new image: `docker commit <container-name> <new-image>`
-   -  Any changes that were made have been preserved, and will be present on the next run of the `new-image`.
+   -   Alternatively, you can update a present image: `docker commit <container-name> <image-name>`
+   -  Any changes that were made have been preserved, and will be present on the next run.
 - Modify the Dockerfile and `build` a new Image
   -  Step 1: Open up the Dockerfile you want to start with in a text editor.
-  -  Step 2: Make changes to the Dockerfile - add new lines with `RUN <command>` to install Python packages, edit environment variables, download models, etc. as the Image is built.
+  -  Step 2: Make changes to the Dockerfile - add new lines with `RUN <command>` to install Python packages, download models, etc. as the Image is built.
   -  Step 3: Save the changes to the Dockerfile.
   -  Step 4: Build the new Image from the Dockerfile.
 ```bash
