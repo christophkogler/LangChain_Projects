@@ -1,9 +1,6 @@
 #	Starting from a base Python image...
 FROM python
 
-#	Information about the maintainer.
-#MAINTAINTER
-
 #	Install LangChain...
 RUN pip install langchain
 
