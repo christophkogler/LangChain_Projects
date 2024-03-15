@@ -1,3 +1,5 @@
+#	This Dockerfile is intended for individuals with NVIDIA GPUs, on Windows or Linux.
+
 #	Starting from a base Python image...
 FROM python
 
