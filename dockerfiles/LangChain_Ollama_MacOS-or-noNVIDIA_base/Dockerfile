@@ -1,4 +1,4 @@
-#  This Dockerfile is intended for individuals without NVIDIA GPU's, or on MacOS.
+#  This Dockerfile is intended for individuals without NVIDIA GPU's, as well as for those on MacOS. It does not have GPU passthrough.
 
 #  Starting from a base Python image...
 FROM python

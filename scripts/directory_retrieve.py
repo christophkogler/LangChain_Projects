@@ -1,7 +1,7 @@
 #directory_retrieve.py
+#Requires RAG dockerfile build.
 
-#  This script is an example paraphrased from the LangChain QuickStart docs @ https://python.langchain.com/docs/get_started/quickstart
-#  It implements basic RAG by ingesting documents (a single web page) into a FAISS vectorstore.
+#  It implements basic RAG by ingesting documents (a directory) into a Chroma vectorstore.
 #  This script requires the following packages to be installed: langchain, ollama, faiss-cpu, beautifulsoup4,
 
 import langchain
