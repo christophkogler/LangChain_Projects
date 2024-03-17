@@ -16,7 +16,8 @@ summarizing_mistral = {
     "model": "mistral:instruct",
     "temperature": 0.0,
     "mirostat": 2,
-    "mirostat_tau": 1.0,
+    "mirostat_eta": .2,
+    "mirostat_tau": 5.0,
     "tfs_z": 2,
     "top_k": 10,
     "top_p": 0.5

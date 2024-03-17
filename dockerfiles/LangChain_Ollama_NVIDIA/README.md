@@ -3,20 +3,16 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES.
 
 # LangChain_Ollama_NVIDIA  
 
-**Description:**  The `LangChain_Ollama_NVIDIA` directory is a project setup for building and running Python applications using NVIDIA GPUs on both Windows and Linux systems. It consists of two main directories: `base` and RAG. The `base` directory contains the primary configuration files for setting up a Docker environment, while the RAG directory holds resources and configuration files for building a Python container image with additional dependencies. Both directories include Dockerfiles that set up Python environments, install necessary packages such as LangChain, NVIDIA Container Toolkit, Ollama, and other required libraries, and configure the Ollama models directory.
+**Description:** The `LangChain_Ollama_NVIDIA` directory is the main project folder that includes essential configurations and setup files for building and running a Python application using NVIDIA GPUs on both Windows and Linux systems. It consists of two primary directories: `base` and `RAG`.
 
- ## base Directory
+The `base` directory contains the primary configuration files for setting up a Python environment, installing necessary packages such as LangChain and the NVIDIA Container Toolkit, and configuring Ollama's models directory.
 
-This directory holds the primary configuration files for building and running a Python application using NVIDIA GPUs on both Windows and Linux systems. It includes a `Dockerfile` that sets up a Python environment, installs necessary packages, and configures Ollama's models directory.
+The `RAG` directory holds the resources and configuration files for building and running a Python application using Docker. It includes a Dockerfile that sets up a Python container image with additional dependencies such as NVIDIA Container Toolkit, Ollama, BeautifulSoup, ChromaDB, cmake, unstructured, and pathlib. The Ollama models directory is located within the container at `/myapp/LLM-models`.
 
-## Dockerfile (base)
+ ## base
 
-The `Dockerfile` in the base directory sets up a Docker environment for running Python applications on NVIDIA GPUs. It utilizes a base Python image, installs LangChain and the NVIDIA Container Toolkit, and configures Ollama's models directory.
+This directory is dedicated to the primary configuration and setup for building and running a Python application using NVIDIA GPUs on both Windows and Linux systems. It includes a `Dockerfile` that establishes a Python environment, installs essential packages such as LangChain and the NVIDIA Container Toolkit, and configures Ollama's models directory.
 
-## RAG Directory
+## RAG
 
-The RAG directory contains resources and configuration files for building and running a Python application using Docker. It includes a `Dockerfile` that sets up a Python container image with additional dependencies installed. The Ollama models directory is located within the container at `/myapp/LLM-models`.
-
-## Dockerfile (RAG)
-
-This `Dockerfile` provides instructions to build a Python container image with additional dependencies installed. It starts from a base Python image, sets up GPU passthrough using NVIDIA Container Toolkit, installs Ollama for LLM serving, and includes required packages. The Ollama models directory is mounted to `/myapp/LLM-models`.
+The RAG directory serves the purpose of building and running a Python application using Docker. It contains a `Dockerfile` that sets up a Python container image with additional dependencies including NVIDIA Container Toolkit, Ollama, BeautifulSoup, ChromaDB, cmake, unstructured, and pathlib. The Ollama models directory is located within the container at `/myapp/LLM-models`.

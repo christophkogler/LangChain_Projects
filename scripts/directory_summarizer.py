@@ -47,13 +47,12 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     
     directories = [dir for dir in directories if dir not in ignore_dirs_named]
     
-    for file_name in files: # Summarize each file.
-        result = summaries.append(summarize_file(file_name, cur_dir_path))
-        if result is not None:
-            summaries.append(result)
-    
     for subdir_name in directories: # Recursively summarize any sub-directories.
         result = summarize_directory(subdir_name, cur_dir_path)
+        summaries.append(result)
+    
+    for file_name in files: # Summarize each file.
+        result = summarize_file(file_name, cur_dir_path)
         summaries.append(result)
 
     if len(summaries) == 0:
@@ -68,8 +67,7 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     doc = Document(page_content=summary_string, metadata={"source": "local"})
     
     # Use a text splitter to process the docs.
-    text_splitter = RecursiveCharacterTextSplitter()
-    documents = text_splitter.split_documents([doc])
+    documents = RecursiveCharacterTextSplitter().split_documents([doc])
 
     common_utils.purify_db()
     embeddings = OllamaEmbeddings(model=model_name)
@@ -91,7 +89,7 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     
     retrieval_chain = create_retrieval_chain(retriever, describe_directory)
     response = retrieval_chain.invoke({"input": directory_name}) # returns a dict, response["answer"]
-    directory_summary = "# " + directory_name + "  \n\n**Description:** " + response["answer"]
+    directory_summary = "# " + directory_name + "  \n\n**Description:**" + response["answer"]
     
     file_summary_prompt = ChatPromptTemplate.from_template("""You are a world class code analyst and technical documentation writer. 
     The context provided below contains the summaries of all files and subdirectories in a directory named {input}.
@@ -100,7 +98,8 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     {context}
     </context>
 
-    Write a concise Markdown summary for each item in the context above. Each item should have a level 2 heading. Do not describe the contents of any directories explicitly, and instead speak about their purpose.""")
+    Write a concise Markdown summary for each item in the context above. Each item should have a level 2 heading. Do not describe the contents of directories explicitly, and instead speak about their purpose. Omit any mentions of the contents of subdirectories to maintain brevity.""")
+    
     describe_files_and_folders = create_stuff_documents_chain(mistral_instruct, file_summary_prompt)
     second_retrieval_chain = create_retrieval_chain(retriever, describe_files_and_folders)
     file_and_folder_summary = second_retrieval_chain.invoke({"input": directory_name, "directory_summary": directory_summary})
@@ -120,7 +119,8 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES.
     return_response = """%s
 
 %s""" % (directory_summary, file_and_folder_summary["answer"])
-    return(return_response)
+
+    return(directory_summary)
 
 
 summarize_directory("LangChain_Projects")
