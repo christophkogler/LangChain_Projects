@@ -1,6 +1,6 @@
 #  This script is an example paraphrased from the LangChain QuickStart docs @ https://python.langchain.com/docs/get_started/quickstart
-#  It implements basic RAG by ingesting documents (a single web page) into a FAISS vectorstore.
-#  This script requires the following packages to be installed: langchain, ollama, faiss-cpu, beautifulsoup4,
+#  It implements basic RAG by ingesting documents (a single web page) into a Chroma vectorstore.
+#  This script requires the following packages to be installed: langchain, ollama, chromadb, beautifulsoup4,
 
 import langchain
 from langchain.chains import create_retrieval_chain
@@ -8,7 +8,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.embeddings import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import Chroma
 from langchain_community.llms import Ollama
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -41,7 +41,7 @@ documents = text_splitter.split_documents(docs)
 embeddings = OllamaEmbeddings(model="mistral:instruct")
 
 #Use the embedding model to ingest documents into the vectorstore.
-vector = FAISS.from_documents(documents, embeddings) 
+vector = Chroma.from_documents(documents, embeddings) 
 
 #Now that we have this data indexed in a vectorstore, we can create a retrieval chain. 
 #   This type of chain will take an incoming question and dynamically pass the most relevant documents as context, along with the original question.

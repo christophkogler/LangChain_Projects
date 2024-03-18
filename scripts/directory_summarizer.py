@@ -1,7 +1,7 @@
 #directory_summarize.py
 #Requires RAG dockerfile build.
 
-#   Analyzes files, then summarizes the general purpose and contents of a directory.
+#   Recursively analyse subdirectories and files within a directory. Generate a readme for all subdirectories.
 #   This script requires the following packages to be installed: langchain ollama beautifulsoup4 cmake unstructured[alldocs] pathlib
 
 import langchain
@@ -20,6 +20,7 @@ from file_summarizer import summarize_file
 import common_utils
 
 def summarize_directory(directory_name, base_path = "/myapp/"):
+    common_utils.purify_db()
     cur_dir_path = base_path + directory_name + "/"
     print("Summarizing %s!" % cur_dir_path)
     #Make sure the Ollama server is running. After that, you can do:
@@ -43,6 +44,7 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     ignore_dirs_named = [
         "__pycache__",
         ".git",
+        ".github",
     ]
     
     directories = [dir for dir in directories if dir not in ignore_dirs_named]
@@ -50,11 +52,15 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     for subdir_name in directories: # Recursively summarize any sub-directories.
         result = summarize_directory(subdir_name, cur_dir_path)
         summaries.append(result)
+        
+    common_utils.purify_db()
     
     for file_name in files: # Summarize each file.
         result = summarize_file(file_name, cur_dir_path)
         summaries.append(result)
 
+    common_utils.purify_db()
+    
     if len(summaries) == 0:
         print("No summaries generated in %s!" % cur_dir_path)
 
@@ -74,7 +80,7 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     vector = Chroma.from_documents(documents, embeddings) 
     retriever = vector.as_retriever()
     
-    directy_summarization_prompt = ChatPromptTemplate.from_template("""You are a world class code analyst and technical documentation writer. 
+    directory_summarization_prompt = ChatPromptTemplate.from_template("""You are a world class code analyst and technical documentation writer. 
     The context provided below contains the summaries of all files and subdirectories in a directory named {input}.
     
     <context>
@@ -85,7 +91,7 @@ def summarize_directory(directory_name, base_path = "/myapp/"):
     
     # {input}
     **Description:**""")
-    describe_directory = create_stuff_documents_chain(mistral_instruct, directy_summarization_prompt)
+    describe_directory = create_stuff_documents_chain(mistral_instruct, directory_summarization_prompt)
     
     retrieval_chain = create_retrieval_chain(retriever, describe_directory)
     response = retrieval_chain.invoke({"input": directory_name}) # returns a dict, response["answer"]
@@ -111,15 +117,17 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES.
 
 %s""" % (directory_summary, file_and_folder_summary["answer"])
     
-    with open(cur_dir_path + "README.md", 'w') as file:
-        file.write(readme_response)
-
-    print("README generated for directory %s!" % cur_dir_path)
+    #Check if the README starts with our machine_gen_warning; if so, replace it. Otherwise, it's human-made; leave it be.
+    machine_gen_warning = """THE FOLLOWING INFORMATION IS MACHINE GENERATED.
+IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES."""
+    with open(cur_dir_path + "README.md", 'r') as file:
+        input_file = file.read()
+        if input_file.startswith(machine_gen_warning):
+            with open(cur_dir_path + "README.md", 'w') as file:
+                file.write(readme_response)
     
-    return_response = """%s
-
-%s""" % (directory_summary, file_and_folder_summary["answer"])
-
+    print("README generated for directory %s!" % cur_dir_path)
+    common_utils.purify_db()
     return(directory_summary)
 
 

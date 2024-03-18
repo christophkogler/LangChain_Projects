@@ -7,13 +7,13 @@ from langchain_community.vectorstores import Chroma
 
 def purify_db():
     # Purify the DB of vectors.
-    chromadb = Chroma()
-    ids = chromadb.get()['ids']
+    ids = Chroma().get()['ids']
     if len(ids) > 0:  # Check if there is at least one ID
         chromadb.delete(ids)
         
 summarizing_mistral = {
     "model": "mistral:instruct",
+    #"num_ctx": 4096,
     "temperature": 0.0,
     "mirostat": 2,
     "mirostat_eta": .2,
@@ -22,3 +22,5 @@ summarizing_mistral = {
     "top_k": 10,
     "top_p": 0.5
 }
+
+

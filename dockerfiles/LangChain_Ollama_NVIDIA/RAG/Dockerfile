@@ -32,4 +32,7 @@ RUN pip install "unstructured[md]"
 #	Install pathlib for path-related convenience...
 RUN pip install pathlib
 
+#	Pre-download some Natural Language ToolKit packages...
+RUN python -c 'import nltk; nltk.download("punkt"); nltk.download("averaged_perceptron_tagger")'
+
 #	Ready to serve LangChain via Ollama!
