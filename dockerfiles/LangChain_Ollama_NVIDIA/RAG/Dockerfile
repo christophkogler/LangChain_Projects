@@ -35,4 +35,5 @@ RUN pip install pathlib
 #	Pre-download some Natural Language ToolKit packages...
 RUN python -c 'import nltk; nltk.download("punkt"); nltk.download("averaged_perceptron_tagger")'
 
-#	Ready to serve LangChain via Ollama!
+#	Install chainlit for easy chat UI...
+RUN pip install chainlit
