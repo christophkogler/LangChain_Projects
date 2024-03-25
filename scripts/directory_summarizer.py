@@ -156,15 +156,13 @@ Write a concise Markdown summary for each item in the context above. Each item s
     #file_and_folder_summary = second_retrieval_chain.invoke({"input": directory_name, "directory_summary": directory_summary})
     #file_and_folder_summary = file_and_folder_summary["answer"] # response string
     
-    
-    
     #Check if the README starts with our machine_gen_warning; if so, replace it. Otherwise, it's human-made; leave it be.
     machine_gen_warning = """THE FOLLOWING INFORMATION IS MACHINE GENERATED.
 IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES."""
 
     readme_response = """%s
 
-%s
+%sgit 
 
 %s""" % (machine_gen_warning, directory_summary, file_and_folder_summary)
 

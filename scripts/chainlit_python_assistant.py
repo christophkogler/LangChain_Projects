@@ -4,6 +4,7 @@
 #   ------------------------------------- INCOMPLETE -----------------------------------------
 #   Using chainlit for ui. Take in a file, chat with user to solve problems / complete tasks / etc related to file.
 #   This script requires the following packages to be installed: langchain ollama chainlit pathlib
+#   This file will not execute properly if called via 'python <file path>'. Execute it using 'chainlit run <file path>'
 
 from langchain_community.llms import Ollama
 from langchain_core.output_parsers import StrOutputParser
