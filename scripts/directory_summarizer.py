@@ -162,7 +162,7 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES."""
 
     readme_response = """%s
 
-%sgit 
+%s 
 
 %s""" % (machine_gen_warning, directory_summary, file_and_folder_summary)
 
