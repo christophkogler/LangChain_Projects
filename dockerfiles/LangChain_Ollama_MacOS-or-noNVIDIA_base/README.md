@@ -3,8 +3,8 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES.
 
 # LangChain_Ollama_MacOS-or-noNVIDIA_base  
 
-**Description:** The `LangChain_Ollama_MacOS-or-noNVIDIA_base` directory contains the setup for using LangChain and Ollama on MacOS systems without NVIDIA GPUs. The main component is a `Dockerfile` that installs LangChain via pip and Ollama using a downloaded shell script, without GPU passthrough. This configuration is suitable for individuals who do not have access to NVIDIA GPUs or are using MacOS. Once the container is built and run from this directory, LangChain will be available for use through Ollama.
+**Description:** The `LangChain_Ollama_MacOS-or-noNVIDIA_base` directory contains a Dockerfile for creating a container suitable for running LangChain and Ollama on MacOS systems without NVIDIA GPUs. The Dockerfile installs both packages using pip and shell scripts respectively, and sets up the models directory for Ollama at `/myapp/LLM-models`. This setup is designed for individuals who do not have access to NVIDIA GPUs or are using MacOS.
 
  ## Dockerfile
 
-**Description:** This `Dockerfile` is used for creating a container without GPU requirements or for MacOS users. It installs LangChain and Ollama within the container, using pip for LangChain and a shell script downloaded from Ollama's website for installation. The models directory for Ollama is set to `/myapp/LLM-models`. Once these packages are installed, the container is prepared to serve LangChain via Ollama.
+**Description:** This `Dockerfile` is based on a Python image and is designed for users without NVIDIA GPUs or those using MacOS. It installs LangChain and Ollama in the container without GPU passthrough. The file sets up the environment for serving LangChain through Ollama. LangChain is installed via pip, while Ollama is installed using a shell script from its website. The models directory for Ollama is set to `/myapp/LLM-models`.

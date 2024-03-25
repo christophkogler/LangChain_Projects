@@ -3,8 +3,8 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES.
 
 # base  
 
-**Description:** The `base` directory contains the primary configuration and setup files for building and running a Python application using NVIDIA GPUs on both Windows and Linux systems. It includes a Dockerfile that sets up a Python environment, installs necessary packages such as LangChain and the NVIDIA Container Toolkit, and configures Ollama's models directory.
+**Description:** The `base` directory contains a Docker environment setup for running Python applications with NVIDIA GPUs on both Windows and Linux systems. It includes a `Dockerfile` that starts with a base Python image, installs LangChain and Ollama, pulls and configures the NVIDIA Container Toolkit, and sets the Ollama models directory to /myapp/LLM-models.
 
  ## Dockerfile
 
-**Description:** This file sets up a Docker environment for running Python applications on both Windows and Linux systems with NVIDIA GPUs. It utilizes a base Python image, installs LangChain and NVIDIA Container Toolkit, and pulls in Ollama. The NVIDIA Container Toolkit is configured to work with the Docker runtime.
+**Description:** This `Dockerfile` configures a Python application environment with NVIDIA GPU support for both Windows and Linux systems. It utilizes a base Python image, installs LangChain and Ollama, sets up the NVIDIA Container Toolkit, and designates the Ollama models directory as /myapp/LLM-models.

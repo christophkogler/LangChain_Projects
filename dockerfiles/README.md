@@ -3,12 +3,12 @@ IT MAY CONTAIN INCONSISTENCIES OR INACCURACIES.
 
 # dockerfiles  
 
-**Description:** The `dockerfiles` directory contains two main project setups: `LangChain_Ollama_MacOS-or-noNVIDIA_base` and `LangChain_Ollama_NVIDIA`. The former is designed for using LangChain and Ollama on MacOS systems without NVIDIA GPUs, while the latter is optimized for utilizing NVIDIA GPUs, Retrieveal Augmented Generation (RAG), and models from Ollama. Each setup includes necessary files such as Dockerfiles for installing dependencies and setting up environments tailored to their respective configurations.
+**Description:** The `dockerfiles` directory contains multiple projects, each with its own subdirectory and Dockerfile setup. The first project, `LangChain_Ollama_MacOS-or-noNVIDIA_base`, is designed for creating a container suitable for running LangChain and Ollama on MacOS systems without NVIDIA GPUs. The second project, `LangChain_Ollama_NVIDIA`, includes two subdirectories: `base` and `RAG`. The `base` directory sets up an environment for running Python applications with NVIDIA GPUs on both Windows and Linux systems. The `RAG` directory is a development environment setup for Retrieveal Augmented Generation (RAG) applications, which includes necessary dependencies such as NVIDIA Container Toolkit, Ollama, LangChain, and various Natural Language Toolkit packages.
 
  ## LangChain_Ollama_MacOS-or-noNVIDIA_base
 
-This directory setup enables the use of LangChain and Ollama on MacOS systems without NVIDIA GPUs. It includes a `Dockerfile` that installs LangChain via pip and Ollama using a downloaded shell script, without GPU passthrough. Suitable for individuals without access to NVIDIA GPUs or using MacOS.
+This directory contains a Dockerfile for creating a container suitable for running LangChain and Ollama on MacOS systems without NVIDIA GPUs. It installs both packages using pip and shell scripts respectively, and sets up the models directory for Ollama at `/myapp/LLM-models`.
 
 ## LangChain_Ollama_NVIDIA
 
-This project setup facilitates building and running a Python application utilizing NVIDIA GPUs, Retrieveal Augmented Generation (RAG), and models from Ollama. It consists of two main directories: `base` and `RAG`. The `base` directory manages primary configuration and setup files for both Windows and Linux systems, including a Dockerfile installing necessary packages and setting up a Python environment. The `RAG` directory contains RAG-specific resources and configurations within the container image.
+This project setup includes two main components: `base` and `RAG`. The `base` directory provides a Docker environment for running Python applications with NVIDIA GPUs on both Windows and Linux systems. It installs LangChain, Ollama, and configures the NVIDIA Container Toolkit. The `RAG` directory is a development environment setup for Retrieveal Augmented Generation (RAG) applications. It builds a Python-based container image with necessary dependencies, including NVIDIA Container Toolkit, Ollama, LangChain, and various Natural Language Toolkit packages.

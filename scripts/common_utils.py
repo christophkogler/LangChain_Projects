@@ -8,7 +8,8 @@ from pathlib import Path
 
 def purify_db():
     # Purify the DB of vectors.
-    ids = Chroma().get()['ids']
+    chromadb = Chroma()
+    ids = chromadb.get()['ids']
     if len(ids) > 0:  # Check if there is at least one ID
         chromadb.delete(ids)
         
