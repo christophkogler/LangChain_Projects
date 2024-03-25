@@ -3,7 +3,7 @@
 
 #   ------------------------------------- INCOMPLETE -----------------------------------------
 #   Using a directory as context, read a file, then act as a coding assistant : answer questions, suggest changes, etc.
-#   This script requires the following packages to be installed: langchain ollama beautifulsoup4 cmake unstructured[alldocs]
+#   This script requires the following packages to be installed: langchain ollama
 
 #Imports
 from langchain.chains import create_retrieval_chain

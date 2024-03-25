@@ -1,8 +1,8 @@
-#chainlit_python_assistant.py
+#chainlit_general_chatbot.py
 #Requires RAG dockerfile build.
 
 #   ------------------------------------- INCOMPLETE -----------------------------------------
-#   Using chainlit for ui. Take in a file, chat with user to solve problems / complete tasks / etc related to file.
+#   Using chainlit for ui. Chat with a user. Use the previous chat as context; include a file if requested. 
 #   This script requires the following packages to be installed: langchain ollama chainlit pathlib
 
 from langchain_community.llms import Ollama

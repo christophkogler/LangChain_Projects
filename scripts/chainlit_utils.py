@@ -1,3 +1,9 @@
+#chainlit_utils.py
+#Requires RAG dockerfile build.
+
+#   Convenience functions for use in Chainlit UI.
+#   This script requires the following packages to be installed: chainlit pathlib
+
 import chainlit as cl
 from pathlib import Path
 

@@ -2,7 +2,7 @@
 #Requires RAG dockerfile build.
 
 #   Recursively analyse subdirectories and files within a directory. Generate a readme for all subdirectories.
-#   This script requires the following packages to be installed: langchain ollama beautifulsoup4 cmake unstructured[alldocs] pathlib
+#   This script requires the following packages to be installed: langchain ollama pathlib
 
 import langchain
 from langchain.chains import create_retrieval_chain
@@ -18,6 +18,10 @@ import os
 import pathlib
 from file_summarizer import summarize_file
 import common_utils
+import subprocess
+
+# Serve Ollama, and feed outputs & errors to variables in order to keep console clean.
+process = subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
 def summarize_directory(directory_name, base_path = "/myapp/"):
     common_utils.purify_db()

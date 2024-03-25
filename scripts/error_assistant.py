@@ -1,11 +1,10 @@
-#code_assistant.py
+#error_assistant.py
 #Requires RAG dockerfile build.
 
 #   ------------------------------------- INCOMPLETE -----------------------------------------
 #   This file is intended to take in an error and file and provide instructions on fixing the error.
-#   This script requires the following packages to be installed: langchain ollama beautifulsoup4 cmake unstructured[alldocs] pathlib
+#   This script requires the following packages to be installed: langchain ollama pathlib
 
-import langchain
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate

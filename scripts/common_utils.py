@@ -1,9 +1,10 @@
-#chromadb_utils.py
+#common_utils.py
 
-#   Provides a few chromadb convenience utilities.
-#   This script requires the following packages to be installed: langchain ollama beautifulsoup4 cmake unstructured[alldocs] pathlib
+#   Provides a few common functions and variables for various scripts.
+#   This script requires the following packages to be installed: chromadb pathlib
 
 from langchain_community.vectorstores import Chroma
+from pathlib import Path
 
 def purify_db():
     # Purify the DB of vectors.

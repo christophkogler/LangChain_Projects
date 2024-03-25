@@ -2,7 +2,7 @@
 #Requires RAG dockerfile build.
 
 #   Uses RAG to analyze a file. If it is 'informational', what is about? If it is 'functional', what does it do?
-#   This script requires the following packages to be installed: langchain ollama beautifulsoup4 cmake unstructured[alldocs] pathlib
+#   This script requires the following packages to be installed: langchain ollama pathlib
 
 import langchain
 from langchain.chains import create_retrieval_chain
@@ -16,6 +16,9 @@ from langchain.schema.document import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import pathlib
 import common_utils
+import subprocess
+
+#This file assumes Ollama is being served already; either by the calling script or seperately.
 
 def summarize_file(file_name, current_dir = "/myapp/LangChain_Projects/"):
 
