@@ -2,36 +2,36 @@
 #Requires RAG dockerfile build.
 
 #   ------------------------------------- INCOMPLETE -----------------------------------------
-#   Using chainlit for ui. Chat with a user. Use the previous chat as context; include a file if requested. 
+#   Using chainlit for ui. Chat with a user. Use the chat history as context; include a file if requested. 
 #   This script requires the following packages to be installed: langchain ollama chainlit pathlib
-#   This file will not execute properly if called via 'python <file path>'. Execute it using 'chainlit run <file path>'
+#   This script will not execute properly if called via 'python <file path>'. Execute it using 'chainlit run <file path>'
+#   This script assumes Ollama is being served.
 
 from langchain_community.llms import Ollama
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.memory import ChatMessageHistory
 import chainlit as cl
-from common_utils import summarizing_mistral
+from common_utils import summarizing_mistral, creative_mistral
 import subprocess
 from chainlit_utils import get_file_path
-
-# Serve Ollama, and feed outputs & errors to variables in order to keep console clean.
-process = subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
 all_messages = ChatMessageHistory()
 all_messages.add_message(("system", """You are a helpful AI assistant."""))
 
 @cl.on_chat_start
 async def on_chat_start():
-    ollama_endpoint = Ollama(**summarizing_mistral)
+    creative_mistral_endpoint = Ollama(**creative_mistral)
     output_parser = StrOutputParser()
     
     #Set up our (lang)chain(s) for this chat...
+    #
     chatbot = ChatPromptTemplate.from_template("""{chat_history}
 
 {input}""")
-    chatbot_chain = chatbot | ollama_endpoint | output_parser
+    chatbot_chain = chatbot | creative_mistral_endpoint | output_parser
     cl.user_session.set("chatbot_chain", chatbot_chain)
+    #
     file_and_chat = ChatPromptTemplate.from_template("""{chat_history}
 
 <working_file>
@@ -39,13 +39,15 @@ async def on_chat_start():
 </working_file>
 
 {input}""")
-    file_and_chat_chain = file_and_chat | ollama_endpoint | output_parser
+    file_and_chat_chain = file_and_chat | creative_mistral_endpoint | output_parser
     cl.user_session.set("file_and_chat_chain", file_and_chat_chain)
+    #Chain for getting user intention: load/change file, or chatting normally?
     determine_user_intention = ChatPromptTemplate.from_messages([
-        ("system", """You are acting as a decision making system. Based on the input from the user, determine what they want. If they indicate an intention to load a file or change the loaded file, respond with only the words 'LOAD FILE'. If they are attempting to do anything else, respond with only the words 'CHAT NORMALLY'. Do not respond with anything besides one of those two phrases."""),
+        ("system", """You are acting as a decision making system for an AI chatbot. Based on the input from the user, determine what they want. If they indicate an intention to load a file or change the loaded file, respond with only the words 'LOAD FILE'. If they are attempting to do anything else, respond with only the words 'CHAT NORMALLY'. Do not respond with anything besides one of those two phrases."""),
         ("human", """{input}""")
     ])
-    determine_intention_chain = determine_user_intention | ollama_endpoint | output_parser
+    deterministic_mistral_endpoint = Ollama(**summarizing_mistral)
+    determine_intention_chain = determine_user_intention | deterministic_mistral_endpoint | output_parser
     cl.user_session.set("determine_intention_chain", determine_intention_chain)
     await cl.Message("How can I help?").send()
 
@@ -65,14 +67,16 @@ async def on_message(message: cl.Message):
     #Determine user intentions; load a/change loaded file? Converse / instructions?
     determine_intention_invoke_dict = {"input":user_input}
     print("Starting intention chain invoke.")
-    intention = determine_intention_chain.invoke(determine_intention_invoke_dict)
-    print("Intention detected:%s" %intention)
-    if intention.startswith("LOAD FILE"):
+    intention = (await determine_intention_chain.ainvoke(determine_intention_invoke_dict)).replace(" ","")
+    print("Intention:%s" % intention)
+    if intention.startswith("LOADFILE"):
         file_path = await get_file_path()
         cl.user_session.set("input_file", file_path)
+        return
     
     targetfile = cl.user_session.get("input_file")
     
+    response = "YOU SHOULD NEVER SEE THIS TEXT."
     #if a target file is set, use 'chat and file'; else, use 'chat'
     if targetfile:
         with open(targetfile, 'r') as file:
@@ -84,14 +88,14 @@ async def on_message(message: cl.Message):
             "input":user_input,
         }
         print("Starting file-chatbot chain invoke.")
-        response = file_and_chat_chain.invoke(file_and_chat_invoke_dict)
+        response = await file_and_chat_chain.ainvoke(file_and_chat_invoke_dict)
     else:
         chatbot_invoke_dict = {
             "chat_history":all_messages.messages,
             "input":user_input,
         }
         print("Starting chatbot chain invoke.")
-        response = chatbot_chain.invoke(chatbot_invoke_dict)
+        response = await chatbot_chain.ainvoke(chatbot_invoke_dict)
         
     print("Response:%s" % response)
     print("Adding response to history.")
